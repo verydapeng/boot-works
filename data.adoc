@@ -1,0 +1,89 @@
+== Database access 
+
+1. Add the maven dependency
++
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+
+<dependency>
+  <groupId>com.h2database</groupId>
+  <artifactId>h2</artifactId>
+  <scope>runtime</scope>
+</dependency>
+----
+
+2. Let's define our domain object 
++
+[source,java]
+----
+
+// simple jpa entity mapping
+@Entity
+class Book {
+
+    @Id
+    @GeneratedValue
+    long id;
+
+    private String title;
+    private int year;
+
+    protected Book() {} // mandates by JPA
+
+    public Book(String title, int year) {
+        this.title = title;
+        this.year = year;
+    }
+
+    public long getId() { return id; }
+
+    public String getTitle() { return title; }
+
+    public int getYear() { return year; }
+}
+
+// spring data implements this interface for us
+@Repository
+interface BookRepository extends JpaRepository<Book, Long> {}
+
+@RestController
+class BookController {
+
+    @Autowired
+    BookRepository repository;
+
+    @RequestMapping("/b/{id}")
+    Book getById(@PathVariable long id) {
+        return repository.findOne(id);
+    }
+}
+
+@Configuration
+class BookConfig {
+
+    @Bean ApplicationRunner init(BookRepository repository) {
+        // init db
+        return args -> {
+            repository.save(new Book("Java tutorial", 1995));
+            repository.save(new Book("Spring reference", 2016));
+        };
+    }
+}
+
+----
+
+3. Restart your app and take a look at http://localhost:8080/b/1 expecting to see the json response
++ 
+[source,json]
+----
+{
+  "id": 1,
+  "title": "hello",
+  "author": "world",
+  "year": 2016
+}
+----
