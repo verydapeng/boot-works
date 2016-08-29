@@ -23,6 +23,11 @@
 @RestController
 class FlipFlopController implements HealthIndicator {
     private final AtomicLong requestCount = new AtomicLong();
+    private final CounterService counterService;
+
+    FlipFlopController(CounterService counterService) {
+        this.counterService = counterService;
+    }
 
     @Override
     public Health health() {
@@ -34,6 +39,7 @@ class FlipFlopController implements HealthIndicator {
 
     @RequestMapping("/metered")
     String metered() {
+        counterService.increment("metered.request.count");
         return "ok" + requestCount.incrementAndGet();
     }
 }
@@ -66,3 +72,5 @@ admin view
 }
 ----
 5. hit the url http://localhost:8080/metered once and check the health endpoint again
+
+6. hit the url http://localhost:8080/metrics to search for the key ```metered.request.count```

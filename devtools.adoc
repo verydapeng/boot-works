@@ -22,7 +22,8 @@
 ----
 @RequestMapping("/metered")
 String metered() {
-    // change the line blow 
+    counterService.increment("metered.request.count");
+    // change the line below 
     return "requests served: " + requestCount.incrementAndGet();
 }
 ----
