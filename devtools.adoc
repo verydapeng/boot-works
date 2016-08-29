@@ -1,0 +1,35 @@
+== DevTools
+
+1. add maven dependency
++
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-devtools</artifactId>
+</dependency>
+----
+
+2. install link:http://livereload.com/extensions/[LiveReload] plugin 
+
+3. restart your app 
+
+4. go to http://localhost:8080/metered, expecting response ```ok1```
+
+5. now go and edit your ```FlipFlopController```
++ 
+[source,java]
+----
+@RequestMapping("/metered")
+String metered() {
+    // change the line blow 
+    return "requests served: " + requestCount.incrementAndGet();
+}
+----
+
+6. *DO NOT* restart your app. Turn your LiveReload plugin on, and depends on 
+the IDE you use, trigger a Build operation:
+- Eclipse: this should happen when you save your file
+- IntelliJ: (main menu) -> Build -> Make Project
++
+After a brief delay, you should see the browser auto reloaded with the latest change

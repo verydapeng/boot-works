@@ -62,7 +62,9 @@ class SecurityConfig {
 
                         .authorizeRequests()
                         .antMatchers("/b/**").hasAnyAuthority("USER")
-                        .antMatchers("/books/**").hasAuthority("ADMIN")
+                        // hasRole(ADMIN) == hasAnyAuthority(ROLE_ADMIN)
+                        .antMatchers("/books/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
 
                         .and().formLogin()
                         .and().logout().permitAll();
@@ -91,7 +93,7 @@ class SecurityConfig {
         // init db, for demo
         return args -> Stream.of(
                 new Account("user", encoder.encode("password"), "USER"),
-                new Account("admin", encoder.encode("password"), "USER,ADMIN")).forEach(repository::save);
+                new Account("admin", encoder.encode("password"), "USER,ROLE_ADMIN")).forEach(repository::save);
     }
 
 }

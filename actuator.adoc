@@ -1,0 +1,68 @@
+== Actuator
+
+1. add maven dependency 
++
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+----
+
+2. restart your app to check the following endpoints 
+- http://localhost:8080/metrics - app metrics 
+- http://localhost:8080/mappings - list all url mappings
+- http://localhost:8080/health - health indicator 
+
+
+3. write your own metrics and health indicator 
++
+[source,java]
+----
+@RestController
+class FlipFlopController implements HealthIndicator {
+    private final AtomicLong requestCount = new AtomicLong();
+
+    @Override
+    public Health health() {
+        long count = requestCount.get();
+        return count % 2 == 1
+                ? Health.up().build()
+                : Health.down().withDetail("count", count).build();
+    }
+
+    @RequestMapping("/metered")
+    String metered() {
+        return "ok" + requestCount.incrementAndGet();
+    }
+}
+----
+
+4. now restart your app, and go to http://localhost:8080/health 
+(depends on the login, *admin* can view more details than *user*). Read the  link:http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-health-access-restrictions[reference] when you have time (optional)
++
+admin view 
++
+[source,json]
+----
+{
+  "status": "DOWN",
+  "flipFlopController": {
+    "status": "DOWN",
+    "count": 0
+  },
+  "diskSpace": {
+    "status": "UP",
+    "total": 499071844352,
+    "free": 243076169728,
+    "threshold": 10485760
+  },
+  "db": {
+    "status": "UP",
+    "database": "H2",
+    "hello": 1
+  }
+}
+----
+5. hit the url http://localhost:8080/metered once and check the health endpoint again
