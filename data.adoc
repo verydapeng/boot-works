@@ -87,8 +87,7 @@ class BookConfig {
 ----
 {
   "id": 1,
-  "title": "hello",
-  "author": "world",
-  "year": 2016
+  "title": "Java tutorial",
+  "year": 1995
 }
 ----
