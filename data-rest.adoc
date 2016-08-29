@@ -1,0 +1,108 @@
+== Database as a Service
+
+1. add maven dependency
++
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-data-rest</artifactId>
+</dependency>
+----
+
+2. mark your repository that to be exposed 
++
+[source,java]
+----
+@Repository
+@RepositoryRestResource // <-- add this 
+interface BookRepository extends JpaRepository<Book, Long> {}
+----
+
+3. test http://localhost:8080/books/ expecting to see json response
++
+[source,json]
+----
+{
+  "_embedded" : {
+    "books" : [ {
+      "title" : "Java tutorial",
+      "year" : 1995,
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/books/1"
+        },
+        "book" : {
+          "href" : "http://localhost:8080/books/1"
+        }
+      }
+    }, {
+      "title" : "Spring reference",
+      "year" : 2016,
+      "_links" : {
+        "self" : {
+          "href" : "http://localhost:8080/books/2"
+        },
+        "book" : {
+          "href" : "http://localhost:8080/books/2"
+        }
+      }
+    } ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://localhost:8080/books"
+    },
+    "profile" : {
+      "href" : "http://localhost:8080/profile/books"
+    }
+  },
+  "page" : {
+    "size" : 20,
+    "totalElements" : 2,
+    "totalPages" : 1,
+    "number" : 0
+  }
+}
+----
+
+4. (optional) Create a new book 
++
+[source,bash]
+----
+curl -H "Content-Type: application/json" -d '{"year": 2013, "title": "Sprint Boot Reference"}' http://localhost:8080/books
+----
+
+5. (optional) Update the book, update the year from 2013 to 2016
++
+[source,bash]
+----
+curl -X PUT -H "Content-Type: application/json" -d '{"year": 2016, "title": "Sprint Boot Reference"}' http://localhost:8080/books/3
+----
+
+6. (optional) Delete the book 
++
+[source,bash]
+----
+curl -i -X DELETE http://localhost:8080/books/3
+----
+
+7. add search, by modifying the BookRepository
++
+[source,java]
+----
+@Repository
+@RepositoryRestResource
+interface BookRepository extends JpaRepository<Book, Long> {
+
+    List<Book> findByTitle(@Param("title") String title); // <- add this
+
+    List<Book> findByYear(@Param("year") int year); // <- add this
+}
+----
+
+8. examine the http://localhost:8080/books page for the search links
+
+9. experiment with
+ - http://localhost:8080/books/search/findByYear?year=2016
+ - http://localhost:8080/books/search/findByTitle?title=Java+tutorial
