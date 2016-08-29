@@ -97,12 +97,12 @@ interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByTitle(@Param("title") String title); // <- add this
 
-    List<Book> findByYear(@Param("year") int year); // <- add this
+    List<Book> findByYearLessThan(@Param("year") int year); // <- add this
 }
 ----
 
 8. examine the http://localhost:8080/books page for the search links
 
 9. experiment with
- - http://localhost:8080/books/search/findByYear?year=2016
+ - http://localhost:8080/books/search/findByYearLessThan?year=2010
  - http://localhost:8080/books/search/findByTitle?title=Java+tutorial
