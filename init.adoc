@@ -1,0 +1,9 @@
+= Init your project using spring starter 
+
+Go to http://start.spring.io 
+
+1. Add *Web* under *Search for dependencie*
+2. (optional) Change the *group* & *artifcat*
+3. Click Generate Project to download your project zip 
+4. Unzip the file 
+5. Go to your terminal and run ```./mvnw spring-boot:run``` (mac), ```mvnw.cmd spring-boot:run``` (win), or use your favorite IDE to open the project and run it 
