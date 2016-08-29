@@ -193,7 +193,6 @@ class SecurityConfig {
                         .antMatchers("/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
-
                         .and().formLogin()
                         .and().logout().permitAll();
             }
