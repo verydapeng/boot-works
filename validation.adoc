@@ -1,0 +1,46 @@
+== Validation
+1. add maven dependency
++
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+----
+
+2. add a sample controller 
++
+[source,java]
+----
+@RestController
+class ValidationBookController {
+
+    @RequestMapping("/b/validationOff")
+    String validationOff(@RequestBody Book book) {
+        System.out.println(book); // don't do this in prod
+        return "OK";
+    }
+
+    @RequestMapping("/b/validationOn")
+    String validationOn(@Valid @RequestBody Book book) {
+        System.out.println(book); // don't do this in prod
+        return "OK";
+    }
+
+}
+----
+
+3. test validationOff, you should see the book gets printed from your server log
++
+[source,bash]
+----
+curl -H "Content-Type: application/json" -d '{"year": 1800, "title":"Sprint Boot Reference"}' http://localhost:8080/b/validationOff
+----
+
+4. test validtionOn, expecting to see a 400 error
++
+[source,bash]
+----
+curl -H "Content-Type: application/json" -d '{"year": 1800, "title":"Sprint Boot Reference"}' http://localhost:8080/b/validationOn
+----
