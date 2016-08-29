@@ -1,0 +1,19 @@
+== Web
+
+1. Add a simple controller 
++
+[source,java]
+----
+@RestController
+class SimpleController {
+
+    @RequestMapping("/")
+    String hello() {
+        return "hello singapore spring user group ";
+    }
+}
+----
+
+2. Restart your app to test, http://localhost:8080/
+
+3. Notice that spring boot auto configs the Spring Web Mvc framework for us  
