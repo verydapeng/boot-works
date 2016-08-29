@@ -44,6 +44,11 @@ class Book {
     public String getTitle() { return title; }
 
     public int getYear() { return year; }
+		
+		@Override
+    public String toString() {
+        return "Book{id=" + id + ", title='" + title + '\'' + ", year=" + year + '}';
+    }
 }
 
 // spring data implements this interface for us
