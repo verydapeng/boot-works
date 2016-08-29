@@ -1,0 +1,99 @@
+== Secure your application
+1. add maven dependency
++
+[source,xml]
+----
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+----
+
+
+2. config your app
++
+[source,java]
+----
+
+@Entity
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+class Account {
+
+    @Id
+    @GeneratedValue
+    private long id;
+    private String username, password, authorities;
+
+    protected Account() {} // mandates by JPA
+
+    public Account(String username, String password, String authorities) {
+        this.username = username;
+        this.password = password;
+        this.authorities = authorities;
+    }
+
+    public long getId() { return id; }
+
+    public String getUsername() { return username; }
+
+    public String getPassword() { return password; }
+
+    public String getAuthorities() { return authorities; }
+}
+
+@Repository
+interface AccountRepository extends JpaRepository<Account, Long> {
+
+    Optional<Account> findByUsername(String username);
+}
+
+
+// actual configuration
+@Configuration
+class SecurityConfig {
+
+    @Bean
+    WebSecurityConfigurerAdapter webSecurityConfigurerAdapter() {
+        return new WebSecurityConfigurerAdapter() {
+            @Override
+            protected void configure(HttpSecurity http) throws Exception {
+                http
+                        .csrf().disable() // enables HTTP GET for /logout, not recommended in prod
+
+                        .authorizeRequests()
+                        .antMatchers("/b/**").hasAnyAuthority("USER")
+                        .antMatchers("/books/**").hasAuthority("ADMIN")
+
+                        .and().formLogin()
+                        .and().logout().permitAll();
+            }
+
+        };
+    }
+
+    @Bean
+    static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    UserDetailsService userDetailsService(AccountRepository accountRepository) {
+        return username -> accountRepository.findByUsername(username)
+                .map(a -> new User(
+                        a.getUsername(),
+                        a.getPassword(),
+                        AuthorityUtils.commaSeparatedStringToAuthorityList(a.getAuthorities())))
+                .orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+    @Bean
+    ApplicationRunner initUsers(PasswordEncoder encoder, AccountRepository repository) {
+        // init db, for demo
+        return args -> Stream.of(
+                new Account("user", encoder.encode("password"), "USER"),
+                new Account("admin", encoder.encode("password"), "USER,ADMIN")).forEach(repository::save);
+    }
+
+}
+
+----
