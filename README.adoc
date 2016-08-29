@@ -1,9 +1,11 @@
 = Spring Boot 
 
-- init 
-- Simple RestController
-- data access with spring data  
-- validation 
-- spring security
-- actuator 
-- banner 
+- link:init.adoc[init]
+- link:web.adoc[web]
+- link:data.adoc[data]
+- link:data.adoc[database as a service]
+- link:validation.adoc[validation]
+- link:security.adoc[security]
+- link:actuator.adoc[actuator]
+- link:devtools.adoc[devtools]
+- link:banner.adoc[banner]
