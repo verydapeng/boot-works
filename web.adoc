@@ -13,7 +13,8 @@ class SimpleController {
     }
 }
 ----
+2. Refer to the link:./boot/src/main/java/singasug/BootApplication.java[sample] if you are unsure about which class to import
 
-2. Restart your app to test, http://localhost:8080/
+3. Restart your app to test, http://localhost:8080/
 
-3. Notice that spring boot auto configs the Spring Web Mvc framework for us  
+4. Notice that spring boot auto configs the Spring Web Mvc framework for us  
