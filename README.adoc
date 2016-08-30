@@ -8,4 +8,3 @@
 - link:security.adoc[security]
 - link:actuator.adoc[actuator]
 - link:devtools.adoc[devtools]
-- link:banner.adoc[banner]
