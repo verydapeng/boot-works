@@ -16,7 +16,9 @@
 
 4. go to http://localhost:8080/metered, expecting response ```ok1```
 
-5. now go and edit your ```FlipFlopController```
+5. *DO NOT* restart your app. Turn your LiveReload plugin on
+
+6. now go and edit your ```FlipFlopController```
 + 
 [source,java]
 ----
@@ -28,8 +30,7 @@ String metered() {
 }
 ----
 
-6. *DO NOT* restart your app. Turn your LiveReload plugin on, and depends on 
-the IDE you use, trigger a Build operation:
+7. Depending on the IDE you use, trigger a Build operation:
 - Eclipse: this should happen when you save your file
 - IntelliJ: (main menu) -> Build -> Make Project
 +
