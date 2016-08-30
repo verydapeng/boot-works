@@ -108,3 +108,16 @@ class SecurityConfig {
 5. Now access http://localhost:8080/books/1 with ```user:password```, what do you get? 
 6. (optional) Provide your link:http://docs.spring.io/spring-security/site/docs/4.1.3.RELEASE/reference/htmlsingle/#jc-form[own] login form 
 7. (optional) Secure your application using link:http://docs.spring.io/spring-security/site/docs/4.1.3.RELEASE/reference/htmlsingle/#enableglobalmethodsecurity[annotations]
+8. (optional) Access the current user's username 
++
+[source,java]
+----
+@RestController
+class WhoAmI {
+
+    @RequestMapping("/me")
+    String me(Principal user) {
+        return user.getName();
+    }
+}
+----
