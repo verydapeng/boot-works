@@ -13,7 +13,6 @@
 2. restart your app to check the following endpoints 
 - http://localhost:8080/metrics - app metrics 
 - http://localhost:8080/mappings - list all url mappings
-- http://localhost:8080/health - health indicator 
 
 
 3. write your own metrics and health indicator 
@@ -74,3 +73,5 @@ admin view
 5. hit the url http://localhost:8080/metered once and check the health endpoint again
 
 6. hit the url http://localhost:8080/metrics to search for the key ```metered.request.count```
+
+7. (optional) Experiment with more link:http://docs.spring.io/spring-boot/docs/current-SNAPSHOT/reference/htmlsingle/#production-ready-endpoints[endpoints]
