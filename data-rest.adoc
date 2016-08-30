@@ -19,7 +19,7 @@
 interface BookRepository extends JpaRepository<Book, Long> {}
 ----
 
-3. test http://localhost:8080/books/ expecting to see json response
+3. restart your app and test http://localhost:8080/books/ expecting to see json response
 +
 [source,json]
 ----
@@ -101,7 +101,7 @@ interface BookRepository extends JpaRepository<Book, Long> {
 }
 ----
 
-8. examine the http://localhost:8080/books page for the search links
+8. restart your app and examine the http://localhost:8080/books page for the search links
 
 9. experiment with
  - http://localhost:8080/books/search/findByYearLessThan?year=2010
