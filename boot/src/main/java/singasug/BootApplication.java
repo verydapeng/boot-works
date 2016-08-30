@@ -6,14 +6,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.metrics.CounterService;
-import org.springframework.boot.actuate.metrics.writer.Delta;
-import org.springframework.boot.actuate.metrics.writer.MetricWriter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -58,7 +58,6 @@ class SimpleController {
     }
 }
 
-
 // simple jpa entity mapping
 @Entity
 class Book {
@@ -96,9 +95,9 @@ class Book {
 @RepositoryRestResource
 interface BookRepository extends JpaRepository<Book, Long> {
 
-    List<Book> findByTitle(@Param("title") String title);
+    List<Book> findByTitle(@Param("title") String title); // <- add this
 
-    List<Book> findByYearLessThan(@Param("year") int year);
+    List<Book> findByYearLessThan(@Param("year") int year); // <- add this
 }
 
 @RestController
@@ -131,14 +130,12 @@ class ValidationBookController {
 
     @RequestMapping("/b/validationOff")
     String validationOff(@RequestBody Book book) {
-        System.out.println(book);
-        return "OK";
+        return "OK - " + book;
     }
 
     @RequestMapping("/b/validationOn")
     String validationOn(@Valid @RequestBody Book book) {
-        System.out.println(book);
-        return "OK";
+        return "OK - " + book;
     }
 
 }
@@ -153,7 +150,7 @@ class Account {
     private long id;
     private String username, password, authorities;
 
-    protected Account() {}
+    protected Account() {} // mandates by JPA
 
     public Account(String username, String password, String authorities) {
         this.username = username;
@@ -176,6 +173,7 @@ interface AccountRepository extends JpaRepository<Account, Long> {
     Optional<Account> findByUsername(String username);
 }
 
+
 // actual configuration
 @Configuration
 class SecurityConfig {
@@ -190,6 +188,7 @@ class SecurityConfig {
 
                         .authorizeRequests()
                         .antMatchers("/b/**").hasAnyAuthority("USER")
+                        // hasRole(ADMIN) == hasAuthority(ROLE_ADMIN)
                         .antMatchers("/books/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
 
@@ -245,6 +244,6 @@ class FlipFlopController implements HealthIndicator {
     @RequestMapping("/metered")
     String metered() {
         counterService.increment("metered.request.count");
-        return "requests served: " + requestCount.incrementAndGet();
+        return "ok" + requestCount.incrementAndGet();
     }
 }
