@@ -9,36 +9,43 @@
 </dependency>
 ----
 
-2. add a sample controller 
+2. specify the validation rules for class Book, and then add a sample controller 
 +
 [source,java]
 ----
+// modify class Book
+@Size(min = 1) // <- add this
+private String title;
+@Min(1900) // <- add this
+private int year;
+//---------------------------
+
 @RestController
 class ValidationBookController {
 
     @RequestMapping("/b/validationOff")
     String validationOff(@RequestBody Book book) {
-        System.out.println(book); // don't do this in prod
-        return "OK";
+        return "OK - " + book;
     }
 
     @RequestMapping("/b/validationOn")
     String validationOn(@Valid @RequestBody Book book) {
-        System.out.println(book); // don't do this in prod
-        return "OK";
+        return "OK - " + book;
     }
 
 }
 ----
 
-3. test validationOff, you should see the book gets printed from your server log
+3. restart your app
+
+4. test validationOff, you should see the book gets printed from your server log
 +
 [source,bash]
 ----
 curl -H "Content-Type: application/json" -d '{"year": 1800, "title":"Sprint Boot Reference"}' http://localhost:8080/b/validationOff
 ----
 
-4. test validtionOn, expecting to see a 400 error
+5. test validtionOn, expecting to see a 400 error
 +
 [source,bash]
 ----
