@@ -45,9 +45,11 @@ class ValidationBookController {
 curl -H "Content-Type: application/json" -d '{"year": 1800, "title":"Sprint Boot Reference"}' http://localhost:8080/b/validationOff
 ----
 
-5. test validtionOn, expecting to see a 400 error
+5. test validationOn, expecting to see a 400 error
 +
 [source,bash]
 ----
 curl -H "Content-Type: application/json" -d '{"year": 1800, "title":"Sprint Boot Reference"}' http://localhost:8080/b/validationOn
 ----
+
+6. (optional) add an ISBN field to book and use regex to validate it (it should be either 10 digits or 13 digits) ```@Pattern(regexp = "\\d{10}|\\d{13}")```

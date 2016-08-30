@@ -91,3 +91,4 @@ class BookConfig {
   "year": 1995
 }
 ----
+4. (optional) link:http://docs.spring.io/spring-boot/docs/1.4.0.RELEASE/reference/htmlsingle/#boot-features-connect-to-production-database[Config] your application to talk to a dedicated database (e.g. local MySQL)
